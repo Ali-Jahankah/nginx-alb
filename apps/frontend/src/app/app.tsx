@@ -4,7 +4,10 @@ export const App = () => {
   const [message, setMessage] = useState("");
   useEffect(() => {
     const getData = async () => {
-      const res = await fetch("http://localhost:4008/api");
+      const url = process.env.NX_PUBLIC_NGINX_HOST;
+      console.log(url);
+      const res = await fetch(`${process.env.NX_PUBLIC_NGINX_HOST}/api`);
+      console.log(`${process.env.NX_PUBLIC_NGINX_HOST}/api`);
       const { message } = await res.json();
       setMessage(message);
     };

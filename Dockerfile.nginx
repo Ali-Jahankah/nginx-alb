@@ -3,12 +3,8 @@ FROM nginx:alpine
 # Copy the Nginx configuration file
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy the startup script
-COPY ./start-nginx.sh /usr/local/bin/start-nginx.sh
-RUN chmod +x /usr/local/bin/start-nginx.sh
-
 # Expose the port for HTTPS
 EXPOSE 443
 
-# Use the startup script as the entry point
-CMD ["/usr/local/bin/start-nginx.sh"]
+# Start Nginx when the container runs
+CMD ["nginx", "-g", "daemon off;"]

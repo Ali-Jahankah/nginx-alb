@@ -21,6 +21,10 @@
           "buildTarget": "server1:build:production"
         }
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/server1/Dockerfile . -t server1"
     }
   }
 }

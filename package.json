@@ -9,7 +9,8 @@
     "server:3": "npx nx serve server3",
     "build:frontend": "nx build frontend",
     "build:server1": "nx build server1",
-    "build:server2": "nx build server2"
+    "build:server2": "nx build server2",
+    "build:server3": "nx build server3"
   },
   "private": true,
   "dependencies": {

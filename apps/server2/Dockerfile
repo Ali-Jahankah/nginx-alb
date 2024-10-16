@@ -3,7 +3,7 @@ FROM node:20-alpine as development
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 RUN npm run build:server2
@@ -24,6 +24,6 @@ RUN chown -R node:node /app
 # Switch to the non-root user (node)
 USER node
 
-RUN npm install --only=production
+RUN npm ci --only=production
 
 CMD ["node", "main"]

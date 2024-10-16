@@ -3,7 +3,8 @@ FROM node:20-alpine as development
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install -g npm@latest
+RUN npm cache clean --force && npm install
 
 COPY . .
 RUN npm run build:server2
@@ -24,6 +25,6 @@ RUN chown -R node:node /app
 # Switch to the non-root user (node)
 USER node
 
-RUN npm ci --only=production
+RUN npm cache clean --force && npm install --only=production
 
 CMD ["node", "main"]

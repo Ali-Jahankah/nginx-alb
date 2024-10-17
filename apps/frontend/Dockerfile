@@ -1,31 +1,26 @@
-# Stage 1: Build the React app using Nx
-FROM node:20-alpine as build
+# Development stage
+FROM node:20-alpine AS development
 
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package*.json ./
+# Copy the root package.json and install all dependencies
+COPY package.json ./
 RUN npm install
 
-# Copy the entire project and build the frontend app
+# Copy the entire source code
 COPY . .
 
-# Use the Nx build command from your package.json
+# Build the frontend application
 RUN npm run build:frontend
 
-# Stage 2: Serve the built app
-FROM node:20-alpine as production
+# Production stage
+FROM node:20-alpine AS production
+ENV NODE_ENV=production
 
 WORKDIR /app
 
-# Copy the built files from the build stage
-COPY --from=build /app/dist/apps/frontend /app/frontend
+# Copy only the build output from the development stage
+COPY --from=development /app/dist/apps/frontend ./build
 
-# Install 'serve' to serve the production build
-RUN npm install -g serve
-
-# Expose the port for the React app
-EXPOSE 3000
-
-# Serve the built frontend app
-CMD ["serve", "-s", "frontend", "-l", "3000"]
+# Serve the built app using npx
+CMD ["npx", "serve", "-s", "build", "-l", "4200"]

@@ -1,4 +1,4 @@
-FROM node:20-alpine as development
+FROM node:20-alpine AS development
 
 WORKDIR /app
 
@@ -8,22 +8,19 @@ RUN npm install
 COPY . .
 RUN npm run build:server1
 
-FROM node:20-alpine as production
+FROM node:20-alpine AS production
 ENV NODE_ENV=production
 ENV PORT=4004
 EXPOSE ${PORT}
 
 WORKDIR /app
 
-# Copy the built application from the development stage
 COPY --from=development /app/dist/apps/server1 ./
 
-# Change ownership of files in /app
-RUN chown -R node:node /app
-
-# Switch to the non-root user (node)
-USER node
-
+# Install production dependencies as root
 RUN npm install --only=production
+
+# Now switch to the non-root user
+USER node
 
 CMD ["node", "main"]

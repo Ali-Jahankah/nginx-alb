@@ -22,19 +22,6 @@
         "serveTargetName": "serve",
         "previewTargetName": "preview"
       }
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    },
-    {
-      "plugin": "@nx/jest/plugin",
-      "options": {
-        "targetName": "test"
-      },
-      "exclude": []
     }
   ],
   "generators": {
@@ -42,15 +29,13 @@
       "application": {
         "babel": true,
         "style": "css",
-        "linter": "eslint",
         "bundler": "webpack"
       },
       "component": {
         "style": "css"
       },
       "library": {
-        "style": "css",
-        "linter": "eslint"
+        "style": "css"
       }
     }
   }

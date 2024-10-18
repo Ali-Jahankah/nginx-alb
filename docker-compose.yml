@@ -1,13 +1,9 @@
-version: "3.9"
+version: "3.8"
 services:
   frontend:
     build:
       dockerfile: ./apps/frontend/Dockerfile
-      target: development
+      target: production
       context: .
-    command: npm run serve:frontend
     ports:
       - "4200:4200"
-    volumes:
-      - .:/app
-      - /app/node_modules

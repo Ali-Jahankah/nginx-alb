@@ -1,26 +1,29 @@
-# Development stage
-FROM node:20-alpine AS development
+# Stage 1: Build stage
+FROM node:20-alpine as development
 
 WORKDIR /app
 
-# Copy the root package.json and install all dependencies
-COPY package.json ./
+# Copy package.json and install dependencies
+COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the entire source code
+# Copy the entire project and build the frontend app
 COPY . .
-
-# Build the frontend application
 RUN npm run build:frontend
 
-# Production stage
-FROM node:20-alpine AS production
-ENV NODE_ENV=production
+# Stage 2: Serve the built app
+FROM node:20-alpine as production
 
 WORKDIR /app
 
-# Copy only the build output from the development stage
-COPY --from=development /app/dist/apps/frontend ./build
+# Copy the built files from the build stage
+COPY --from=development /app/dist/apps/frontend ./
 
-# Serve the built app using npx
-CMD ["npx", "serve", "-s", "build", "-l", "4200"]
+# Install serve globally
+RUN npm install -g serve
+
+# Expose the port
+EXPOSE 4200
+
+# Start the server
+CMD ["serve", "-s", ".", "-l", "4200"]

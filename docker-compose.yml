@@ -3,7 +3,30 @@ services:
   frontend:
     build:
       dockerfile: ./apps/frontend/Dockerfile
-      target: production
       context: .
     ports:
       - "4200:4200"
+  server1:
+    build:
+      dockerfile: ./apps/server1/Dockerfile
+      context: .
+    ports:
+      - 4004:4004
+  server2:
+    build:
+      dockerfile: ./apps/server2/Dockerfile
+      context: .
+    ports:
+      - 4005:4005
+  server3:
+    build:
+      dockerfile: ./apps/server3/Dockerfile
+      context: .
+    ports:
+      - 4006:4006
+  nginx:
+    build:
+      dockerfile: ./Dockerfile.nginx
+      context: .
+    ports:
+      - 4008:4008

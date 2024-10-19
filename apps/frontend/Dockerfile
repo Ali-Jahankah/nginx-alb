@@ -1,18 +1,14 @@
-# Stage 1: Build stage
-FROM node:20-alpine as development
+FROM node:20-alpine AS development
 
 WORKDIR /app
 
-# Copy package.json and install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the entire project and build the frontend app
 COPY . .
 RUN npm run build:frontend
 
-# Stage 2: Serve the built app
-FROM node:20-alpine as production
+FROM node:20-alpine AS production
 
 WORKDIR /app
 

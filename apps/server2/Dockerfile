@@ -9,9 +9,7 @@ COPY . .
 RUN npm run build:server2
 
 FROM node:20-alpine AS production
-ENV NODE_ENV=production
-ENV PORT=4005
-EXPOSE ${PORT}
+
 
 WORKDIR /app
 
@@ -22,5 +20,6 @@ RUN npm install --only=production
 
 # Now switch to the non-root user
 USER node
+ENV PORT=4005
 
 CMD ["node", "main"]

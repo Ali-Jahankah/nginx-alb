@@ -1,101 +1,58 @@
-# NginxAlb
+# Project Description
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This project demonstrates a robust and scalable architecture using Docker, Node.js, React, and Nginx. It comprises the following components:
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+*   **Three Node.js Backend Servers:** Three separate Node.js servers handle backend logic and API requests. This setup allows for horizontal scaling and redundancy. Each server runs in its own Docker container, defined by individual Dockerfiles located in the `apps` directory (e.g., `apps/server1/Dockerfile`, `apps/server2/Dockerfile`, `apps/server3/Dockerfile`). These servers are exposed on ports 4004, 4005, and 4006 respectively within the Docker network.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+*   **React Frontend Application:** A React application serves as the user interface. It communicates with the backend servers via API calls. The frontend is also containerized using a Dockerfile located in `apps/frontend/Dockerfile` and exposed on port 4200 within the Docker network.
 
-## Run tasks
+*   **Nginx Load Balancer:** Nginx acts as a reverse proxy and load balancer, distributing incoming traffic across the three Node.js backend servers. This ensures high availability and prevents service disruption. If one of the backend servers becomes unavailable (e.g., due to a crash or intentional shutdown), Nginx automatically redirects traffic to the remaining healthy servers. This failover mechanism is a key feature of this project. The Nginx configuration is defined in `Dockerfile.nginx`. The Nginx container exposes port 4008 to the host machine, making the application accessible to users.
 
-To run the dev server for your app, use:
+**Key Features:**
 
-```sh
-npx nx serve frontend
-```
+*   **Load Balancing:** Nginx distributes traffic across multiple backend servers, improving performance and availability.
+*   **High Availability:** If one backend server fails, Nginx redirects traffic to the remaining servers, ensuring uninterrupted service.
+*   **Containerization:** Docker is used to containerize all components, ensuring consistent environments and simplified deployment.
+*   **Scalability:** The backend can be easily scaled by adding more Node.js server containers.
+*   **Nx Monorepo (Implied):** The presence of `nx build` commands and the structure of the `apps` directory suggests the use of Nx, a monorepo tool, for managing the project's multiple applications.
 
-To create a production bundle:
+**Requirements:**
 
-```sh
-npx nx build frontend
-```
+*   Docker installed and running
+*   Node.js version >= 20
 
-To see all available targets to run for a project, run:
+# Running the project locally
 
-```sh
-npx nx show project frontend
-```
+1.  **Clone the repository:**
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+    ```bash
+    git clone [https://your-repository-url.git](https://your-repository-url.git)
+    ```
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+2.  **Build the Docker images:**
 
-## Add new projects
+    This command builds all the Docker images for your application:
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+    ```bash
+    docker-compose build
+    ```
 
-Use the plugin's generator to create new projects.
+3.  **Run the application:**
 
-To generate a new application, use:
+    This command starts all the containers defined in your `docker-compose.yml` file:
 
-```sh
-npx nx g @nx/react:app demo
-```
+    ```bash
+    docker-compose up
+    ```
 
-To generate a new library, use:
+4.  **Access the application:**
 
-```sh
-npx nx g @nx/react:lib mylib
-```
+    *   The frontend should be accessible at `http://localhost:4008`.
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+**Additional Notes:**
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+*   By default, Nginx is configured to distribute traffic across three Node.js servers running on ports 4004, 4005, and 4006. You can modify these ports in the `docker-compose.yml` file if needed.
+*   You can use `docker-compose down` to stop and remove all running containers.
 
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+docker-compose down
